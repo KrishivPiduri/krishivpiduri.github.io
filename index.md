@@ -78,7 +78,7 @@ Invited speaker at DevOps Days Austin 2025, sharing insights on DevOps and stude
 * [Automind](https://automind.hackyourgrade.com)
 * [Feynman Helper](https://hackyourgrade.com)
 * [Flix AI](https://flixai.hackyourgrade.com)
-* [Smat SAT](https://smartsat.hackyourgrade.com)
+* [Smart SAT](https://smartsat.hackyourgrade.com)
 * [StudyDuel](https://duel.hackyourgrade.com)
 * [Japanese Parser](https://japanese.krishivpiduri.com)
 * [Internship Auto-Applier (Chrome Web Store)](https://chromewebstore.google.com/detail/internship-application-au/mgiaffjejlkmikomgejlpkdbebofjblj)
