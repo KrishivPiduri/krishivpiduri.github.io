@@ -372,27 +372,106 @@
          font-size: 0.9rem;
       }
 
+      .profile-section {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         gap: 3rem;
+         margin-bottom: 2rem;
+      }
+
+      .profile-image-container {
+         position: relative;
+      }
+
+      .profile-placeholder {
+         width: 150px;
+         height: 150px;
+         border-radius: 50%;
+         background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(236, 72, 153, 0.3));
+         border: 3px solid rgba(0, 212, 255, 0.5);
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         position: relative;
+         overflow: hidden;
+         cursor: pointer;
+         transition: all 0.4s ease;
+      }
+
+      .profile-placeholder:hover {
+         transform: scale(1.05);
+         box-shadow: 0 20px 40px rgba(0, 212, 255, 0.3);
+      }
+
+      .profile-placeholder svg {
+         color: #e0e6ed;
+         opacity: 0.8;
+      }
+
+      .image-overlay {
+         position: absolute;
+         bottom: 0;
+         left: 0;
+         right: 0;
+         background: rgba(0, 0, 0, 0.8);
+         color: white;
+         padding: 0.5rem;
+         font-size: 0.8rem;
+         text-align: center;
+         transform: translateY(100%);
+         transition: transform 0.3s ease;
+      }
+
+      .profile-placeholder:hover .image-overlay {
+         transform: translateY(0);
+      }
+
+      .hero-content {
+         text-align: left;
+      }
+
+      .school-info {
+         font-size: 1.1rem;
+         color: #a0a9c0;
+         margin-top: 0.5rem;
+         font-weight: 400;
+      }
+
       @media (max-width: 768px) {
-         .container {
-            padding: 0 1rem;
+         .profile-section {
+            flex-direction: column;
+            text-align: center;
          }
 
-         .projects-grid {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
+         .hero-content {
+            text-align: center;
          }
 
-         .highlight-project {
-            grid-column: 1;
+         .profile-placeholder {
+            width: 120px;
+            height: 120px;
          }
+      }
+      .container {
+         padding: 0 1rem;
+      }
 
-         .hero-title {
-            font-size: 2.5rem;
-         }
+      .projects-grid {
+         grid-template-columns: 1fr;
+         gap: 1.5rem;
+      }
 
-         .section-title {
-            font-size: 2rem;
-         }
+      .highlight-project {
+         grid-column: 1;
+      }
+
+      .hero-title {
+         font-size: 2.5rem;
+      }
+
+      .section-title {
+         font-size: 2rem;
       }
 
       .scroll-indicator {
@@ -420,15 +499,46 @@
 
 <div class="container">
    <header>
-      <h1 class="hero-title">Developer & Innovator</h1>
-      <p class="hero-subtitle">Building the future, one project at a time</p>
+      <div class="profile-section">
+         <div class="profile-image-container">
+            <div class="profile-placeholder">
+               <svg width="80" height="80" viewBox="0 0 100 100" fill="none">
+                  <circle cx="50" cy="35" r="15" fill="currentColor" opacity="0.7"/>
+                  <path d="M20 80 Q20 60 35 60 L65 60 Q80 60 80 80" fill="currentColor" opacity="0.7"/>
+               </svg>
+               <div class="image-overlay">Add Your Photo</div>
+            </div>
+         </div>
+         <div class="hero-content">
+            <h1 class="hero-title">Krishiv Piduri</h1>
+            <p class="hero-subtitle">Developer, Innovator & Published Researcher</p>
+            <p class="school-info">Henry M. Gunn High School • Grade 10</p>
+         </div>
+      </div>
    </header>
 
    <section class="section">
       <h2 class="section-title">Education</h2>
       <div class="education-card">
-         <h3 style="color: #00d4ff; font-size: 1.3rem; margin-bottom: 0.5rem;">Grade 9 (Current)</h3>
-         <p style="color: #a0a9c0;">Currently focused on building innovative projects while maintaining academic excellence</p>
+         <h3 style="color: #00d4ff; font-size: 1.3rem; margin-bottom: 0.5rem;">Henry M. Gunn High School</h3>
+         <p style="color: #a0a9c0; margin-bottom: 1rem;">Grade 10 (Current) • Maintaining academic excellence while building innovative projects</p>
+         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="skill-tag" style="background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4); font-size: 0.8rem;">Academic Excellence</span>
+            <span class="skill-tag" style="background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4); font-size: 0.8rem;">Leadership</span>
+         </div>
+      </div>
+   </section>
+
+   <section class="section">
+      <h2 class="section-title">Research & Publications</h2>
+      <div class="project-card highlight-project">
+         <h3 class="project-title">AIAS Conference Research Paper</h3>
+         <p class="project-description">Authored and presented original research that was accepted into the AIAS (Association for the Advancement of Artificial Intelligence and Soft Computing) conference. Contributing to academic discourse in AI and technology at the high school level.</p>
+         <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <span class="skill-tag" style="background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4);">Research</span>
+            <span class="skill-tag" style="background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4);">AI/ML</span>
+            <span class="skill-tag" style="background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4);">Academic Writing</span>
+         </div>
       </div>
    </section>
 
@@ -497,6 +607,12 @@
             <h3 class="project-title">Kubernetes Book</h3>
             <p class="project-description">Authored and published "Kubernetes in the Real World" - available on Amazon for developers worldwide.</p>
             <span style="color: #00d4ff; font-weight: 500;">Published Author</span>
+         </div>
+
+         <div class="project-card">
+            <h3 class="project-title">Startup Internship</h3>
+            <p class="project-description">Gained hands-on experience working with a startup team, contributing to real-world projects and learning industry best practices in a fast-paced environment.</p>
+            <span style="color: #ec4899; font-weight: 500;">Professional Experience</span>
          </div>
 
          <div class="project-card">
