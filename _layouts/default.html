@@ -1,57 +1,633 @@
 <!DOCTYPE html>
-<html lang="{{ site.lang | default: "en-US" }}">
+<html lang="en">
 <head>
-   {% if site.google_analytics %}
-   <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
-   <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      
-      gtag('config', '{{ site.google_analytics }}');
-   </script>
-   {% endif %}
    <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1">
-   {% seo %}
-   <link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
-   <!--[if lt IE 9]>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
-   <![endif]-->
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Your Portfolio</title>
+   <style>
+      * {
+         margin: 0;
+         padding: 0;
+         box-sizing: border-box;
+      }
+
+      body {
+         background: linear-gradient(-45deg, #0f0f23, #1a1a3e, #2d1b69, #0f0f23);
+         background-size: 400% 400%;
+         animation: gradientShift 15s ease infinite;
+         color: #e0e6ed;
+         font-family: 'Inter', system-ui, -apple-system, sans-serif;
+         line-height: 1.6;
+         overflow-x: hidden;
+      }
+
+      @keyframes gradientShift {
+         0% { background-position: 0% 50%; }
+         50% { background-position: 100% 50%; }
+         100% { background-position: 0% 50%; }
+      }
+
+      .container {
+         max-width: 1200px;
+         margin: 0 auto;
+         padding: 0 2rem;
+      }
+
+      header {
+         padding: 2rem 0;
+         text-align: center;
+         position: relative;
+      }
+
+      .hero-title {
+         font-size: clamp(3rem, 8vw, 5rem);
+         font-weight: 800;
+         background: linear-gradient(135deg, #00d4ff, #5b21b6, #ec4899);
+         background-clip: text;
+         -webkit-background-clip: text;
+         -webkit-text-fill-color: transparent;
+         margin-bottom: 1rem;
+         animation: titleGlow 3s ease-in-out infinite alternate;
+      }
+
+      @keyframes titleGlow {
+         0% { filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3)); }
+         100% { filter: drop-shadow(0 0 25px rgba(236, 72, 153, 0.5)); }
+      }
+
+      .hero-subtitle {
+         font-size: 1.5rem;
+         color: #a0a9c0;
+         margin-bottom: 2rem;
+         font-weight: 300;
+      }
+
+      .floating-elements {
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         pointer-events: none;
+         z-index: -1;
+      }
+
+      .floating-dot {
+         position: absolute;
+         width: 4px;
+         height: 4px;
+         background: rgba(0, 212, 255, 0.6);
+         border-radius: 50%;
+         animation: float 6s ease-in-out infinite;
+      }
+
+      .floating-dot:nth-child(2) { animation-delay: -1s; background: rgba(236, 72, 153, 0.6); }
+      .floating-dot:nth-child(3) { animation-delay: -2s; background: rgba(91, 33, 182, 0.6); }
+
+      @keyframes float {
+         0%, 100% { transform: translateY(0px) rotate(0deg); }
+         50% { transform: translateY(-20px) rotate(180deg); }
+      }
+
+      .section {
+         margin: 4rem 0;
+         opacity: 0;
+         transform: translateY(30px);
+         animation: fadeInUp 0.8s ease-out forwards;
+      }
+
+      .section:nth-child(2) { animation-delay: 0.1s; }
+      .section:nth-child(3) { animation-delay: 0.2s; }
+      .section:nth-child(4) { animation-delay: 0.3s; }
+
+      @keyframes fadeInUp {
+         to {
+            opacity: 1;
+            transform: translateY(0);
+         }
+      }
+
+      .section-title {
+         font-size: 2.5rem;
+         font-weight: 700;
+         margin-bottom: 2rem;
+         position: relative;
+         display: inline-block;
+      }
+
+      .section-title::after {
+         content: '';
+         position: absolute;
+         bottom: -5px;
+         left: 0;
+         width: 100%;
+         height: 3px;
+         background: linear-gradient(90deg, #00d4ff, #ec4899);
+         transform: scaleX(0);
+         animation: underlineGrow 1s ease-out 0.5s forwards;
+      }
+
+      @keyframes underlineGrow {
+         to { transform: scaleX(1); }
+      }
+
+      .education-card {
+         background: rgba(255, 255, 255, 0.05);
+         backdrop-filter: blur(10px);
+         border: 1px solid rgba(255, 255, 255, 0.1);
+         border-radius: 20px;
+         padding: 2rem;
+         margin-bottom: 2rem;
+         transition: all 0.3s ease;
+         position: relative;
+         overflow: hidden;
+      }
+
+      .education-card::before {
+         content: '';
+         position: absolute;
+         top: -50%;
+         left: -50%;
+         width: 200%;
+         height: 200%;
+         background: linear-gradient(45deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+         transform: rotate(45deg);
+         transition: all 0.6s ease;
+         opacity: 0;
+      }
+
+      .education-card:hover::before {
+         animation: shimmer 1.5s ease-in-out;
+      }
+
+      @keyframes shimmer {
+         0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+         50% { opacity: 1; }
+         100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+      }
+
+      .education-card:hover {
+         transform: translateY(-5px);
+         box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+      }
+
+      .projects-grid {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+         gap: 2rem;
+         margin-top: 2rem;
+      }
+
+      .project-card {
+         background: rgba(255, 255, 255, 0.05);
+         backdrop-filter: blur(15px);
+         border: 1px solid rgba(255, 255, 255, 0.1);
+         border-radius: 20px;
+         padding: 2rem;
+         transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+         position: relative;
+         overflow: hidden;
+         cursor: pointer;
+      }
+
+      .project-card::before {
+         content: '';
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(236, 72, 153, 0.1));
+         opacity: 0;
+         transition: opacity 0.4s ease;
+      }
+
+      .project-card:hover::before {
+         opacity: 1;
+      }
+
+      .project-card:hover {
+         transform: translateY(-10px) scale(1.02);
+         box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+         border-color: rgba(0, 212, 255, 0.3);
+      }
+
+      .project-title {
+         font-size: 1.4rem;
+         font-weight: 600;
+         margin-bottom: 1rem;
+         color: #00d4ff;
+         position: relative;
+         z-index: 2;
+      }
+
+      .project-description {
+         color: #c2c9d6;
+         margin-bottom: 1.5rem;
+         position: relative;
+         z-index: 2;
+      }
+
+      .project-link {
+         display: inline-flex;
+         align-items: center;
+         color: #ec4899;
+         text-decoration: none;
+         font-weight: 500;
+         transition: all 0.3s ease;
+         position: relative;
+         z-index: 2;
+      }
+
+      .project-link:hover {
+         color: #00d4ff;
+         transform: translateX(5px);
+      }
+
+      .project-link::after {
+         content: '→';
+         margin-left: 0.5rem;
+         transition: transform 0.3s ease;
+      }
+
+      .project-link:hover::after {
+         transform: translateX(5px);
+      }
+
+      .highlight-project {
+         grid-column: 1 / -1;
+         background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(91, 33, 182, 0.1));
+         border: 2px solid rgba(0, 212, 255, 0.3);
+      }
+
+      .highlight-project .project-title {
+         font-size: 1.8rem;
+         background: linear-gradient(135deg, #00d4ff, #ec4899);
+         background-clip: text;
+         -webkit-background-clip: text;
+         -webkit-text-fill-color: transparent;
+      }
+
+      .skills-container {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+         gap: 2rem;
+         margin-top: 2rem;
+      }
+
+      .skill-category {
+         background: rgba(255, 255, 255, 0.05);
+         backdrop-filter: blur(10px);
+         border: 1px solid rgba(255, 255, 255, 0.1);
+         border-radius: 15px;
+         padding: 2rem;
+         transition: all 0.3s ease;
+      }
+
+      .skill-category:hover {
+         transform: translateY(-5px);
+         box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .skill-category h4 {
+         color: #00d4ff;
+         margin-bottom: 1rem;
+         font-size: 1.2rem;
+      }
+
+      .skill-tags {
+         display: flex;
+         flex-wrap: wrap;
+         gap: 0.5rem;
+      }
+
+      .skill-tag {
+         background: rgba(236, 72, 153, 0.2);
+         border: 1px solid rgba(236, 72, 153, 0.4);
+         padding: 0.5rem 1rem;
+         border-radius: 25px;
+         font-size: 0.9rem;
+         transition: all 0.3s ease;
+         cursor: pointer;
+      }
+
+      .skill-tag:hover {
+         background: rgba(236, 72, 153, 0.4);
+         transform: scale(1.05);
+      }
+
+      .links-grid {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+         gap: 1rem;
+         margin-top: 2rem;
+      }
+
+      .link-button {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         padding: 1rem;
+         background: rgba(255, 255, 255, 0.05);
+         border: 1px solid rgba(255, 255, 255, 0.1);
+         border-radius: 15px;
+         color: #e0e6ed;
+         text-decoration: none;
+         transition: all 0.4s ease;
+         position: relative;
+         overflow: hidden;
+      }
+
+      .link-button::before {
+         content: '';
+         position: absolute;
+         top: 0;
+         left: -100%;
+         width: 100%;
+         height: 100%;
+         background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+         transition: left 0.6s ease;
+      }
+
+      .link-button:hover::before {
+         left: 100%;
+      }
+
+      .link-button:hover {
+         transform: translateY(-3px);
+         box-shadow: 0 10px 25px rgba(0, 212, 255, 0.2);
+         border-color: rgba(0, 212, 255, 0.5);
+         color: #00d4ff;
+      }
+
+      footer {
+         text-align: center;
+         padding: 4rem 0 2rem;
+         margin-top: 4rem;
+         border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .footer-text {
+         color: #6b7280;
+         font-size: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
+         .container {
+            padding: 0 1rem;
+         }
+
+         .projects-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+         }
+
+         .highlight-project {
+            grid-column: 1;
+         }
+
+         .hero-title {
+            font-size: 2.5rem;
+         }
+
+         .section-title {
+            font-size: 2rem;
+         }
+      }
+
+      .scroll-indicator {
+         position: fixed;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 4px;
+         background: linear-gradient(90deg, #00d4ff, #ec4899);
+         transform: scaleX(0);
+         transform-origin: left;
+         z-index: 1000;
+         transition: transform 0.3s ease;
+      }
+   </style>
 </head>
 <body>
-   <div class="wrapper">
-      <header>
-         <h1><a href="{{ "/" | absolute_url }}">{{ site.title | default: site.github.repository_name }}</a></h1>
-         {% if site.logo %}
-         <img src="{{site.logo | relative_url}}" alt="Logo" />
-         {% endif %}
-         <p>{{ site.description | default: site.github.project_tagline }}</p>
-         {% if site.github.is_project_page %}
-         <p class="view"><a href="{{ site.github.repository_url }}">View the Project on GitHub <small>{{ site.github.repository_nwo }}</small></a></p>
-         {% endif %}
-         {% if site.github.is_user_page %}
-         <p class="view"><a href="{{ site.github.owner_url }}">View My GitHub Profile</a></p>
-         {% endif %}
-         {% if site.show_downloads %}
-         <ul class="downloads">
-            <li><a href="{{ site.github.zip_url }}">Download <strong>ZIP File</strong></a></li>
-            <li><a href="{{ site.github.tar_url }}">Download <strong>TAR Ball</strong></a></li>
-            <li><a href="{{ site.github.repository_url }}">View On <strong>GitHub</strong></a></li>
-         </ul>
-         {% endif %}
-      </header>
-      <section>
-         {{ content }}
-      </section>
-      <footer>
-         {% if site.github.is_project_page %}
-         <p>This project is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
-         {% endif %}
-         <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
-   </div>
-   <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
+<div class="scroll-indicator"></div>
+
+<div class="floating-elements">
+   <div class="floating-dot" style="top: 10%; left: 10%;"></div>
+   <div class="floating-dot" style="top: 20%; right: 15%;"></div>
+   <div class="floating-dot" style="bottom: 30%; left: 20%;"></div>
+</div>
+
+<div class="container">
+   <header>
+      <h1 class="hero-title">Developer & Innovator</h1>
+      <p class="hero-subtitle">Building the future, one project at a time</p>
+   </header>
+
+   <section class="section">
+      <h2 class="section-title">Education</h2>
+      <div class="education-card">
+         <h3 style="color: #00d4ff; font-size: 1.3rem; margin-bottom: 0.5rem;">Grade 9 (Current)</h3>
+         <p style="color: #a0a9c0;">Currently focused on building innovative projects while maintaining academic excellence</p>
+      </div>
+   </section>
+
+   <section class="section">
+      <h2 class="section-title">Featured Projects</h2>
+      <div class="projects-grid">
+         <div class="project-card highlight-project">
+            <h3 class="project-title">MindTheGap Challenge</h3>
+            <p class="project-description">Organized a large-scale challenge to combat negativity bias. Led sponsorship outreach, raising over $300,000. Engaged 150+ participants and judges from major tech firms. A testament to the power of community-driven innovation.</p>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+               <span class="skill-tag" style="background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4);">Leadership</span>
+               <span class="skill-tag" style="background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4);">Fundraising</span>
+               <span class="skill-tag" style="background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4);">Community</span>
+            </div>
+         </div>
+
+         <div class="project-card">
+            <h3 class="project-title">Automind</h3>
+            <p class="project-description">An AI-powered app that generates mind maps, suggests deeper exploration paths, and summarizes content to enhance learning.</p>
+            <a href="https://automind.hackyourgrade.com" class="project-link">Explore Automind</a>
+         </div>
+
+         <div class="project-card">
+            <h3 class="project-title">StudyDuel</h3>
+            <p class="project-description">A study-quiz battle platform that went viral with over 200 Reddit comments. Gamifying education for competitive learners.</p>
+            <a href="https://duel.hackyourgrade.com" class="project-link">Join the Battle</a>
+         </div>
+
+         <div class="project-card">
+            <h3 class="project-title">Smart SAT</h3>
+            <p class="project-description">Intelligent SAT practice tool leveraging College Board data and custom practice routines for optimized test prep.</p>
+            <a href="https://smartsat.hackyourgrade.com" class="project-link">Start Practicing</a>
+         </div>
+
+         <div class="project-card">
+            <h3 class="project-title">Feynman Helper</h3>
+            <p class="project-description">Study tool implementing the Feynman Technique with AI-assisted explanations to master complex concepts.</p>
+            <a href="https://hackyourgrade.com" class="project-link">Learn with Feynman</a>
+         </div>
+
+         <div class="project-card">
+            <h3 class="project-title">Flix AI</h3>
+            <p class="project-description">Personalized flashcard system that adapts to user weaknesses, powered by intelligent algorithms.</p>
+            <a href="https://flixai.hackyourgrade.com" class="project-link">Get Personalized Cards</a>
+         </div>
+
+         <div class="project-card">
+            <h3 class="project-title">Japanese Grammar Parser</h3>
+            <p class="project-description">Advanced parsing tool for Japanese learners, breaking down complex grammar structures into digestible components.</p>
+            <a href="https://japanese.krishivpiduri.com" class="project-link">Parse Japanese</a>
+         </div>
+
+         <div class="project-card">
+            <h3 class="project-title">Internship Auto-Applier</h3>
+            <p class="project-description">Chrome extension that automates the internship application process, saving hours of repetitive work.</p>
+            <a href="https://chromewebstore.google.com/detail/internship-application-au/mgiaffjejlkmikomgejlpkdbebofjblj" class="project-link">Download Extension</a>
+         </div>
+
+         <div class="project-card">
+            <h3 class="project-title">Day Pilot</h3>
+            <p class="project-description">iOS productivity app designed to streamline daily workflows and boost efficiency.</p>
+            <a href="https://testflight.apple.com/join/KpWw776V" class="project-link">Try on TestFlight</a>
+         </div>
+
+         <div class="project-card">
+            <h3 class="project-title">Kubernetes Book</h3>
+            <p class="project-description">Authored and published "Kubernetes in the Real World" - available on Amazon for developers worldwide.</p>
+            <span style="color: #00d4ff; font-weight: 500;">Published Author</span>
+         </div>
+
+         <div class="project-card">
+            <h3 class="project-title">Zap CRE Internship</h3>
+            <p class="project-description">Developed an amenity-map generator displaying nearby amenities around any given address during professional internship.</p>
+            <span style="color: #ec4899; font-weight: 500;">Professional Experience</span>
+         </div>
+      </div>
+   </section>
+
+   <section class="section">
+      <h2 class="section-title">Speaking & Recognition</h2>
+      <div class="project-card highlight-project">
+         <h3 class="project-title">DevOps Days Austin 2025 Speaker</h3>
+         <p class="project-description">Invited to share insights on DevOps and student innovation at one of the industry's premier conferences. Speaking alongside industry leaders and pioneers in the DevOps space.</p>
+         <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <span class="skill-tag" style="background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4);">Public Speaking</span>
+            <span class="skill-tag" style="background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4);">DevOps</span>
+            <span class="skill-tag" style="background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4);">Innovation</span>
+         </div>
+      </div>
+   </section>
+
+   <section class="section">
+      <h2 class="section-title">Skills & Expertise</h2>
+      <div class="skills-container">
+         <div class="skill-category">
+            <h4>Programming & DevOps</h4>
+            <div class="skill-tags">
+               <span class="skill-tag">JavaScript</span>
+               <span class="skill-tag">Python</span>
+               <span class="skill-tag">Kubernetes</span>
+               <span class="skill-tag">Chrome Extensions</span>
+               <span class="skill-tag">iOS/TestFlight</span>
+            </div>
+         </div>
+         <div class="skill-category">
+            <h4>AI & Machine Learning</h4>
+            <div class="skill-tags">
+               <span class="skill-tag">Personalized AI</span>
+               <span class="skill-tag">Study Tools</span>
+               <span class="skill-tag">Smart Generators</span>
+               <span class="skill-tag">Adaptive Learning</span>
+            </div>
+         </div>
+         <div class="skill-category">
+            <h4>Leadership & Communication</h4>
+            <div class="skill-tags">
+               <span class="skill-tag">Public Speaking</span>
+               <span class="skill-tag">Fundraising</span>
+               <span class="skill-tag">Sponsorship Outreach</span>
+               <span class="skill-tag">Community Building</span>
+            </div>
+         </div>
+         <div class="skill-category">
+            <h4>Full-Stack Development</h4>
+            <div class="skill-tags">
+               <span class="skill-tag">Frontend</span>
+               <span class="skill-tag">Backend</span>
+               <span class="skill-tag">Deployment</span>
+               <span class="skill-tag">Web Apps</span>
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <section class="section">
+      <h2 class="section-title">Explore My Work</h2>
+      <div class="links-grid">
+         <a href="https://automind.hackyourgrade.com" class="link-button">Automind</a>
+         <a href="https://hackyourgrade.com" class="link-button">Feynman Helper</a>
+         <a href="https://flixai.hackyourgrade.com" class="link-button">Flix AI</a>
+         <a href="https://smartsat.hackyourgrade.com" class="link-button">Smart SAT</a>
+         <a href="https://duel.hackyourgrade.com" class="link-button">StudyDuel</a>
+         <a href="https://japanese.krishivpiduri.com" class="link-button">Japanese Parser</a>
+         <a href="https://chromewebstore.google.com/detail/internship-application-au/mgiaffjejlkmikomgejlpkdbebofjblj" class="link-button">Auto-Applier Extension</a>
+         <a href="https://testflight.apple.com/join/KpWw776V" class="link-button">Day Pilot (iOS)</a>
+      </div>
+   </section>
+
+   <footer>
+      <p class="footer-text">Building innovative solutions • Making education accessible • Inspiring the next generation</p>
+   </footer>
+</div>
+
+<script>
+   // Scroll progress indicator
+   window.addEventListener('scroll', () => {
+      const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+      document.querySelector('.scroll-indicator').style.transform = `scaleX(${scrolled / 100})`;
+   });
+
+   // Add more floating elements dynamically
+   function createFloatingDot() {
+      const dot = document.createElement('div');
+      dot.className = 'floating-dot';
+      dot.style.left = Math.random() * 100 + '%';
+      dot.style.top = Math.random() * 100 + '%';
+      dot.style.animationDelay = Math.random() * 6 + 's';
+      dot.style.background = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.4)`;
+      document.querySelector('.floating-elements').appendChild(dot);
+   }
+
+   // Create additional floating elements
+   for (let i = 0; i < 5; i++) {
+      setTimeout(createFloatingDot, i * 1000);
+   }
+
+   // Add hover effects for project cards
+   document.querySelectorAll('.project-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+         card.style.zIndex = '10';
+      });
+      card.addEventListener('mouseleave', () => {
+         card.style.zIndex = '1';
+      });
+   });
+
+   // Smooth scroll for internal links (if any were added)
+   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+         e.preventDefault();
+         const target = document.querySelector(this.getAttribute('href'));
+         if (target) {
+            target.scrollIntoView({
+               behavior: 'smooth',
+               block: 'start'
+            });
+         }
+      });
+   });
+</script>
 </body>
 </html>
